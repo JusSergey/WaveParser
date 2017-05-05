@@ -51,15 +51,16 @@ public:
 
     FXBody getAllShanels();
 
-//    LeftRightScannels getScannels();
+    LeftRightScannels getScannels();
 
-//    std::vector<__int32_t> getSample();
+    std::vector<__int32_t> getSample();
 
 
 private:
 #define BLOCK_SIZE 32*1024
     typedef std::vector<char> BlockType;
-    typedef std::pair<BlockType, int> ContainerObj;
+//    typedef std::array<char, BLOCK_SIZE> BlockType;
+    typedef std::pair<BlockType, int/*use bytes*/> ContainerObj;
     std::list<ContainerObj> blocksBody;
 };
 

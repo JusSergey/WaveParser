@@ -42,6 +42,7 @@ void WaveParser::readBody(ifstream &source)
         block.second = source.readsome(begin, oneSecondBytes);
         blocksBody.push_back(block);
     }
+    (cout << "blocks: " << blocksBody.size() << '\n').flush();
 }
 
 void print4byte(const char *buffer) {
@@ -107,35 +108,40 @@ WaveParser::FXBody WaveParser::getAllShanels()
     return fxbody;
 }
 
-//WaveParser::LeftRightScannels WaveParser::getScannels()
-//{
-//    const int step = head.bitsPerSample/8;
+WaveParser::LeftRightScannels WaveParser::getScannels()
+{
+    const int step = head.bitsPerSample/8;
 
-//    BlockType &block = blocksBody.begin()->first;
+    BlockType &block = blocksBody.begin()->first;
 
-//    Channel r, l;
-//    r.reserve(head.byteRate/step + 8);
-//    l.reserve(head.byteRate/step + 8);
+    Channel r, l;
+    r.reserve(head.byteRate/step + 8);
+    l.reserve(head.byteRate/step + 8);
 
-//    for (int i = 0; i < head.byteRate; i += step)
-//        ((i / step) & 1 ? r : l).push_back(*((Channel::value_type*)&block[i]));
+    for (int i = 0; i < head.byteRate; i += step)
+        ((i / step) & 1 ? r : l).push_back(*((Channel::value_type*)&block[i]));
 
-//    return WaveParser::LeftRightScannels(std::move(l), std::move(r));
-//}
+    return WaveParser::LeftRightScannels(std::move(l), std::move(r));
+}
 
-//std::vector<__int32_t> WaveParser::getSample()
-//{
-//    int step = head.bitsPerSample/8;
+std::vector<__int32_t> WaveParser::getSample()
+{
+    int step = head.bitsPerSample/8;
 
-//    BlockType &block = blocksBody.begin()->first;
+    BlockType &block = blocksBody.begin()->first;
 
-//    int mask = ((1 << (head.bitsPerSample)) - 1);
+    int mask = ((1 << (head.bitsPerSample)) - 1);
 
-//    std::vector<__int32_t> result;
-//    result.reserve(head.byteRate/step + 8);
+    std::vector<__int32_t> result;
+    result.reserve(head.byteRate/step + 8);
 
-//    for (int i = 0; i < head.byteRate; i += step)
-//        result.push_back(*((int*)&block[i]));
+(std::cout << "step: " << step << '\n').flush();
 
-//    return result;
-//}
+    for (int i = 0; i < head.byteRate; i += step) {
+//        std::cout << (int)block[i] << '\n';
+        result.push_back(*((int*)&block[i]));
+
+    }
+
+    return result;
+}
