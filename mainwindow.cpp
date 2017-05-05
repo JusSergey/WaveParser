@@ -6,9 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
     valueSliderX(nullptr)
 {
     setStyleSheet("Background: gray");
-    WaveParser p(QFileDialog::getOpenFileName().toStdString().c_str());
-
-    setFxbody(std::move(p.getAllShanels()));
 
     sliderScaleX = new QSlider(Qt::Orientation::Horizontal, this);
     sliderScaleY = new QSlider(Qt::Orientation::Horizontal, this);
@@ -19,20 +16,28 @@ MainWindow::MainWindow(QWidget *parent) :
     sliderScaleX->setRange(1, 10000);
     sliderScaleX->setValue(10);
 
-    sliderScaleY->setRange(1, 100);
+    sliderScaleY->setRange(1, 10000);
     sliderScaleY->setValue(10);
 
-    valueSliderX = new QLabel(QString::number((float)sliderScaleX->value() / 10.f), this);
-    valueSliderY = new QLabel(QString::number((float)sliderScaleY->value() / 10.f), this);
+    valueSliderX = new QLabel(QString("Scale width  1/") + QString::number((float)sliderScaleX->value() / 10.f) + (sliderScaleX->value() % 10 ? "" : ".0"), this);
+    valueSliderY = new QLabel(QString("Scale heigth 1/") + QString::number((float)sliderScaleY->value() / 10.f) + (sliderScaleY->value() % 10 ? "" : ".0"), this);
+
+    QFont font;
+    font.setFamily("monospace");
+
+    valueSliderX->setFont(font);
+    valueSliderY->setFont(font);
 
     QHBoxLayout *lx = new QHBoxLayout;
     QHBoxLayout *ly = new QHBoxLayout;
 
-    lx->addWidget(valueSliderX);
-    lx->addWidget(sliderScaleX);
 
-    ly->addWidget(valueSliderY);
+    lx->addWidget(sliderScaleX);
+    lx->addWidget(valueSliderX);
+
+
     ly->addWidget(sliderScaleY);
+    ly->addWidget(valueSliderY);
 
     QVBoxLayout *lv = new QVBoxLayout;
 
@@ -41,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
     lv->addLayout(ly);
 
     setLayout(lv);
+
+    QTimer::singleShot(500, this, SLOT(slotSelectAndReadFromFile()));
 
 }
 
@@ -53,7 +60,7 @@ void MainWindow::slotChangeScaleX(int value)
     scalex = (float)value / 10;
 
     if (valueSliderX)
-        valueSliderX->setText(QString::number(scalex));
+        valueSliderX->setText(QString("Scale width  1/") + QString::number(scalex) + (value % 10 ? "" : ".0"));
 
     repaint();
 }
@@ -63,7 +70,14 @@ void MainWindow::slotChangeScaleY(int value)
     scaley = (float)value / 10;
 
     if (valueSliderY)
-        valueSliderY->setText(QString::number(scaley));
+        valueSliderY->setText(QString("Scale heigth 1/") + QString::number(scaley) + (value % 10 ? "" : ".0"));
 
+    repaint();
+}
+
+void MainWindow::slotSelectAndReadFromFile()
+{
+    WaveParser parser(QFileDialog::getOpenFileName().toStdString().c_str());
+    setFxbody(std::move(parser.getAllShanels()));
     repaint();
 }

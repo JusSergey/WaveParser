@@ -19,6 +19,7 @@ private:
 private slots:
     void slotChangeScaleX(int value);
     void slotChangeScaleY(int value);
+    void slotSelectAndReadFromFile();
 
 };
 

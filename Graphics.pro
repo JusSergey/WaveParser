@@ -26,8 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     drawwidget.cpp \
-    waveparser.cpp
+    waveparser.cpp \
+    soundanalize.cpp
 
 HEADERS  += mainwindow.h \
     drawwidget.h \
-    waveparser.h
+    waveparser.h \
+    soundanalize.h

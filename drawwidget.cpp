@@ -42,13 +42,13 @@ void DrawWidget::paintEvent(QPaintEvent *event)
 
         std::pair<value_type, value_type> lr = std::move(getOffsetSample(i - offsetx));
 
-        QPoint currl(i/scalex, lr.first / -500 * scaley + offset);
+        QPoint currl(i/scalex, lr.first / (-500.f / scaley) + offset);
         if (prevl.x() > -1000)
             p.drawLine(prevl, currl);
 
         prevl = currl;
 
-        QPoint currr(i/scalex, lr.second / -500 * scaley + offset*3);
+        QPoint currr(i/scalex, lr.second / (-500.f / scaley) + offset*3);
         if (prevr.x() > -1000)
             p.drawLine(prevr, currr);
 
